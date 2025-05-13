@@ -8,7 +8,7 @@
   "author": "https://github.com/allohamora",
   "scripts": {
     "prepare": "husky",
-    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "dev": "tsx watch --clear-screen=false src/index.tsx",
     "build": "tsc -p ./tsconfig.build.json",
     "postbuild": "tsc-alias -p ./tsconfig.build.json",
     "format": "prettier . --check",
@@ -44,5 +44,11 @@
   "bugs": {
     "url": "https://github.com/allohamora/weather-subscription/issues"
   },
-  "homepage": "https://github.com/allohamora/weather-subscription#readme"
+  "homepage": "https://github.com/allohamora/weather-subscription#readme",
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@hono/swagger-ui": "^0.5.1",
+    "@hono/zod-openapi": "^0.19.6",
+    "hono": "^4.7.9"
+  }
 }
