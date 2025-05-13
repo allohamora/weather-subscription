@@ -23,6 +23,7 @@
     "@hono/zod-openapi": "^0.19.6",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
+    "fast-jwt": "^6.0.1",
     "hono": "^4.7.9",
     "postgres": "^3.4.5",
     "znv": "^0.5.0",
