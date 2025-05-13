@@ -9,6 +9,8 @@ export const {
   POSTGRES_URL,
   DRIZZLE_DEBUG = true,
 
+  WEATHER_API_KEY,
+
   JWT_SECRET,
   JWT_EXPIRES_IN,
 } = parseEnv(process.env, {
@@ -17,6 +19,8 @@ export const {
 
   POSTGRES_URL: z.string().url(),
   DRIZZLE_DEBUG: z.boolean().optional(),
+
+  WEATHER_API_KEY: z.string(),
 
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.number(),
