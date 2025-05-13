@@ -4,10 +4,14 @@ import 'dotenv/config';
 
 export const {
   NODE_ENV = 'development',
-
   PORT = 3000,
+
+  POSTGRES_URL,
+  DRIZZLE_DEBUG = true,
 } = parseEnv(process.env, {
   NODE_ENV: z.enum(['development', 'test', 'production']).optional(),
-
   PORT: z.number().optional(),
+
+  POSTGRES_URL: z.string().url(),
+  DRIZZLE_DEBUG: z.boolean().optional(),
 });
