@@ -57,5 +57,10 @@
   "bugs": {
     "url": "https://github.com/allohamora/weather-subscription/issues"
   },
-  "homepage": "https://github.com/allohamora/weather-subscription#readme"
+  "homepage": "https://github.com/allohamora/weather-subscription#readme",
+  "engines": {
+    "node": ">=v22.13.0",
+    "npm": ">=10.9.2"
+  },
+  "packageManager": "npm@10.9.2"
 }
