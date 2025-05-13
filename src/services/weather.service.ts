@@ -1,5 +1,5 @@
 import { WEATHER_API_KEY } from 'src/config.js';
-import { AppError, AppErrorCode } from 'src/error.js';
+import { InternalServerError, NotFound } from 'src/http-error.js';
 
 const API_URL = 'https://api.weatherapi.com/v1';
 
@@ -78,8 +78,8 @@ export const getWeather = async (city: string) => {
   const { error } = data as WeatherErrorResponse;
 
   if (error.code === ErrorCode.NO_MATCHING_LOCATION_FOUND) {
-    throw new AppError(AppErrorCode.NOT_FOUND, error.message);
+    throw NotFound(error.message);
   }
 
-  throw new AppError(AppErrorCode.SOMETHING_WENT_WRONG, error?.message ?? 'Unknown error');
+  throw InternalServerError(error?.message);
 };
