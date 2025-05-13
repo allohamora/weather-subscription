@@ -1,6 +1,7 @@
 {
   "name": "weather-subscription",
   "version": "0.0.1",
+  "description": "a weather subscription app",
   "private": true,
   "author": "https://github.com/allohamora",
   "scripts": {
