@@ -41,16 +41,6 @@ export const confirm = async (token: string) => {
   await createSubscription(options);
 };
 
-export type UnsubscribeOptions = {
-  subscriptionId: string;
-};
-
-export const getUnsubscribeToken = async (options: UnsubscribeOptions) => {
-  return await sign(options);
-};
-
-export const unsubscribe = async (token: string) => {
-  const { subscriptionId } = await verify<UnsubscribeOptions>(token);
-
+export const unsubscribe = async (subscriptionId: string) => {
   await removeSubscriptionById(subscriptionId);
 };
