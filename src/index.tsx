@@ -7,6 +7,7 @@ import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.jsx';
 import { NODE_ENV, PORT } from './config.js';
 import { subscriptionRouter } from './routes/subscription.routes.js';
+import { runMigrations } from './db.js';
 
 const app = new OpenAPIHono();
 
@@ -43,7 +44,9 @@ app.route('/api', subscriptionRouter);
 
 app.get('*', serveStatic({ root: './public' }));
 
-serve({ fetch: app.fetch, port: PORT }, (info) => {
+serve({ fetch: app.fetch, port: PORT }, async (info) => {
+  await runMigrations();
+
   const parts = ['Server has been started'];
 
   if (NODE_ENV === 'development') {
