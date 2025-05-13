@@ -1,0 +1,14 @@
+{
+  "name": "weather-subscription",
+  "version": "0.0.1",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allohamora/weather-subscription.git"
+  },
+  "author": "https://github.com/allohamora",
+  "bugs": {
+    "url": "https://github.com/allohamora/weather-subscription/issues"
+  },
+  "homepage": "https://github.com/allohamora/weather-subscription#readme"
+}
