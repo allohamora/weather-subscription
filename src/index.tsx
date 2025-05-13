@@ -6,16 +6,17 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.jsx';
 import { NODE_ENV, PORT } from './config.js';
+import { subscriptionRouter } from './routes/subscription.routes.js';
 
 const app = new OpenAPIHono();
 
 app.use(secureHeaders());
 
 app.onError((err, c) => {
-  const statusText = err instanceof HTTPException ? err.message : 'internal server error';
+  const message = err instanceof HTTPException ? err.message : 'internal server error';
   const statusCode = err instanceof HTTPException ? err.status : 500;
 
-  return c.text(statusText, statusCode);
+  return c.json({ message }, statusCode);
 });
 
 // if you specify the 200 schema as a string, you cannot be able to use c.html because of type issues
@@ -37,6 +38,9 @@ app.doc('/swagger.json', {
   },
 });
 app.get('/swagger', swaggerUI({ url: '/swagger.json' }));
+
+app.route('/api', subscriptionRouter);
+
 app.get('*', serveStatic({ root: './public' }));
 
 serve({ fetch: app.fetch, port: PORT }, (info) => {

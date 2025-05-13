@@ -5,6 +5,7 @@ import 'dotenv/config';
 export const {
   NODE_ENV = 'development',
   PORT = 3000,
+  APP_URL = 'http://localhost:3000',
 
   POSTGRES_URL,
   DRIZZLE_DEBUG = true,
@@ -16,6 +17,7 @@ export const {
 } = parseEnv(process.env, {
   NODE_ENV: z.enum(['development', 'test', 'production']).optional(),
   PORT: z.number().optional(),
+  APP_URL: z.string().url(),
 
   POSTGRES_URL: z.string().url(),
   DRIZZLE_DEBUG: z.boolean().optional(),
