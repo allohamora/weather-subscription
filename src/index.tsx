@@ -8,6 +8,7 @@ import { Root } from './root.jsx';
 import { NODE_ENV, PORT } from './config.js';
 import { subscriptionRouter } from './routes/subscription.routes.js';
 import { runMigrations } from './db.js';
+import { createLogger } from './libs/pino.lib.js';
 
 const app = new OpenAPIHono();
 
@@ -44,6 +45,8 @@ app.route('/api', subscriptionRouter);
 
 app.get('*', serveStatic({ root: './public' }));
 
+const logger = createLogger('server');
+
 serve({ fetch: app.fetch, port: PORT }, async (info) => {
   await runMigrations();
 
@@ -53,7 +56,7 @@ serve({ fetch: app.fetch, port: PORT }, async (info) => {
     parts.push(`at http://localhost:${info.port}`);
   }
 
-  console.log(parts.join(' '), {
+  logger.info(parts.join(' '), {
     NODE_ENV,
   })
 });

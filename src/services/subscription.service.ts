@@ -7,6 +7,9 @@ import {
 } from 'src/repositories/subscription.repository.js';
 import { APP_URL } from 'src/config.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
+import { createLogger } from 'src/libs/pino.lib.js';
+
+const logger = createLogger('subscription.service');
 
 export type SubscribeOptions = {
   email: string;
@@ -27,7 +30,7 @@ export const subscribe = async (options: SubscribeOptions) => {
   const confirmationLink = `${APP_URL}/api/confirm/${token}`;
 
   // TODO: send email with confirmation link
-  console.log({ confirmationLink });
+  logger.info({ confirmationLink });
 };
 
 export const confirm = async (token: string) => {

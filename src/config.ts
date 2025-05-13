@@ -14,6 +14,8 @@ export const {
 
   JWT_SECRET,
   JWT_EXPIRES_IN,
+
+  PINO_LEVEL = 'info',
 } = parseEnv(process.env, {
   NODE_ENV: z.enum(['development', 'test', 'production']).optional(),
   PORT: z.number().optional(),
@@ -26,4 +28,6 @@ export const {
 
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.number(),
+
+  PINO_LEVEL: z.enum(['debug', 'info', 'warn', 'error', 'silent']).optional(),
 });
