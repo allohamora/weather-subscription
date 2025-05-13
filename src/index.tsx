@@ -5,9 +5,7 @@ import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.jsx';
-
-const PORT = parseInt(process.env.PORT || '3000', 10);
-const NODE_ENV = process.env.NODE_ENV || 'development';
+import { NODE_ENV, PORT } from './config.js';
 
 const app = new OpenAPIHono();
 
