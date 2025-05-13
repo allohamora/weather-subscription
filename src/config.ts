@@ -18,6 +18,6 @@ export const {
   POSTGRES_URL: z.string().url(),
   DRIZZLE_DEBUG: z.boolean().optional(),
 
-  JWT_SECRET: z.string().min(32),
+  JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.number(),
 });
