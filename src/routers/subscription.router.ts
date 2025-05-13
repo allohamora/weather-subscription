@@ -4,7 +4,7 @@ import { subscribe, confirm, unsubscribe } from 'src/services/subscription.servi
 import { Frequency } from 'src/db.schema.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
 
-const app = new OpenAPIHono();
+export const subscriptionRouter = new OpenAPIHono();
 
 const subscribeSchema = z.object({
   email: z.string().email(),
@@ -12,7 +12,7 @@ const subscribeSchema = z.object({
   frequency: z.enum([Frequency.Hourly, Frequency.Daily]),
 });
 
-app.openapi(
+subscriptionRouter.openapi(
   createRoute({
     method: 'post',
     path: '/subscribe',
@@ -64,7 +64,7 @@ app.openapi(
   },
 );
 
-app.openapi(
+subscriptionRouter.openapi(
   createRoute({
     method: 'get',
     path: '/confirm/{token}',
@@ -91,7 +91,7 @@ app.openapi(
   },
 );
 
-app.openapi(
+subscriptionRouter.openapi(
   createRoute({
     method: 'get',
     path: '/unsubscribe/{token}',
@@ -117,5 +117,3 @@ app.openapi(
     return c.json({ message: 'Unsubscribed successfully' }, 200);
   },
 );
-
-export const subscriptionRouter = app;

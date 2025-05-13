@@ -6,7 +6,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.jsx';
 import { NODE_ENV, PORT } from './config.js';
-import { subscriptionRouter } from './routes/subscription.routes.js';
+import { subscriptionRouter } from './routers/subscription.router.js';
 import { runMigrations } from './db.js';
 import { createLogger } from './libs/pino.lib.js';
 
