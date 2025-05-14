@@ -4,117 +4,117 @@ import { subscribe, confirm, unsubscribe } from 'src/services/subscription.servi
 import { Frequency } from 'src/db.schema.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
 
-export const subscriptionController = new OpenAPIHono();
+export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
+  const subscribeSchema = z.object({
+    email: z.string().email(),
+    city: z.string().min(1),
+    frequency: z.enum([Frequency.Hourly, Frequency.Daily]),
+  });
 
-const subscribeSchema = z.object({
-  email: z.string().email(),
-  city: z.string().min(1),
-  frequency: z.enum([Frequency.Hourly, Frequency.Daily]),
-});
-
-subscriptionController.openapi(
-  createRoute({
-    method: 'post',
-    path: '/subscribe',
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: subscribeSchema,
-          },
-          'application/x-www-form-urlencoded': {
-            schema: subscribeSchema,
+  app.openapi(
+    createRoute({
+      method: 'post',
+      path: '/subscribe',
+      request: {
+        body: {
+          content: {
+            'application/json': {
+              schema: subscribeSchema,
+            },
+            'application/x-www-form-urlencoded': {
+              schema: subscribeSchema,
+            },
           },
         },
       },
+      responses: {
+        // in the contract 200 instead of 201
+        200: {
+          description: 'Subscription initiated',
+        },
+        400: {
+          description: 'Invalid input',
+        },
+        409: {
+          description: 'Email already subscribed',
+        },
+        500: {
+          description: 'Internal server error',
+        },
+      },
+    }),
+    async (c) => {
+      // we have this function here, to preserve type safety
+      const getSubscribeBody = () => {
+        const contentType = c.req.header('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+          return c.req.valid('json');
+        } else if (contentType.includes('application/x-www-form-urlencoded')) {
+          return c.req.valid('form');
+        } else {
+          throw new Exception(ExceptionCode.VALIDATION_ERROR, 'Unsupported content type');
+        }
+      };
+
+      const options = getSubscribeBody();
+      await subscribe(options);
+
+      return c.json({ message: 'Subscription initiated' }, 200);
     },
-    responses: {
-      // in the contract 200 instead of 201
-      200: {
-        description: 'Subscription initiated',
+  );
+
+  app.openapi(
+    createRoute({
+      method: 'get',
+      path: '/confirm/{token}',
+      request: {
+        params: z.object({
+          token: z.string().jwt(),
+        }),
       },
-      400: {
-        description: 'Invalid input',
+      responses: {
+        200: {
+          description: 'Subscription confirmed successfully',
+        },
+        400: {
+          description: 'Invalid token',
+        },
       },
-      409: {
-        description: 'Email already subscribed',
-      },
-      500: {
-        description: 'Internal server error',
-      },
+    }),
+    async (c) => {
+      const { token } = c.req.param();
+
+      await confirm(token);
+
+      return c.json({ message: 'Subscription confirmed successfully' }, 200);
     },
-  }),
-  async (c) => {
-    // we have this function here, to preserve type safety
-    const getSubscribeBody = () => {
-      const contentType = c.req.header('content-type') || '';
+  );
 
-      if (contentType.includes('application/json')) {
-        return c.req.valid('json');
-      } else if (contentType.includes('application/x-www-form-urlencoded')) {
-        return c.req.valid('form');
-      } else {
-        throw new Exception(ExceptionCode.VALIDATION_ERROR, 'Unsupported content type');
-      }
-    };
-
-    const options = getSubscribeBody();
-    await subscribe(options);
-
-    return c.json({ message: 'Subscription initiated' }, 200);
-  },
-);
-
-subscriptionController.openapi(
-  createRoute({
-    method: 'get',
-    path: '/confirm/{token}',
-    request: {
-      params: z.object({
-        token: z.string().jwt(),
-      }),
-    },
-    responses: {
-      200: {
-        description: 'Subscription confirmed successfully',
+  app.openapi(
+    createRoute({
+      method: 'get',
+      path: '/unsubscribe/{token}',
+      request: {
+        params: z.object({
+          token: z.string().uuid(),
+        }),
       },
-      400: {
-        description: 'Invalid token',
+      responses: {
+        200: {
+          description: 'Unsubscribed successfully',
+        },
+        400: {
+          description: 'Invalid token',
+        },
       },
+    }),
+    async (c) => {
+      const { token } = c.req.param();
+
+      await unsubscribe(token);
+
+      return c.json({ message: 'Unsubscribed successfully' }, 200);
     },
-  }),
-  async (c) => {
-    const { token } = c.req.param();
-
-    await confirm(token);
-
-    return c.json({ message: 'Subscription confirmed successfully' }, 200);
-  },
-);
-
-subscriptionController.openapi(
-  createRoute({
-    method: 'get',
-    path: '/unsubscribe/{token}',
-    request: {
-      params: z.object({
-        token: z.string().uuid(),
-      }),
-    },
-    responses: {
-      200: {
-        description: 'Unsubscribed successfully',
-      },
-      400: {
-        description: 'Invalid token',
-      },
-    },
-  }),
-  async (c) => {
-    const { token } = c.req.param();
-
-    await unsubscribe(token);
-
-    return c.json({ message: 'Unsubscribed successfully' }, 200);
-  },
-);
+  );
+};

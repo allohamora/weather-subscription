@@ -3,7 +3,8 @@ import { HTTPException } from 'hono/http-exception';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { subscriptionController } from './controllers/subscription.controller.js';
+import { makeSubscriptionRoutes } from './controllers/subscription.controller.js';
+import { makeWeatherRoutes } from './controllers/weather.controller.js';
 import { Root } from './root.js';
 
 export const app = new OpenAPIHono();
@@ -37,6 +38,11 @@ app.doc('/swagger.json', {
 });
 app.get('/swagger', swaggerUI({ url: '/swagger.json' }));
 
-app.route('/api', subscriptionController);
+
+const apiRouter = new OpenAPIHono();
+makeWeatherRoutes(apiRouter);
+makeSubscriptionRoutes(apiRouter);
+
+app.route('/api', apiRouter);
 
 app.get('*', serveStatic({ root: './public' }));
