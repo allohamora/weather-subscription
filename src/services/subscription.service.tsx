@@ -8,6 +8,8 @@ import {
 import { APP_URL } from 'src/config.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
 import { createLogger } from 'src/libs/pino.lib.js';
+import { sendEmail } from 'src/libs/email.lib.js';
+import { SubscribeTemplate, SubscribeTemplateText } from 'src/templates/subscribe.js';
 
 const logger = createLogger('subscription.service');
 
@@ -29,8 +31,16 @@ export const subscribe = async (options: SubscribeOptions) => {
   const token = await sign(options);
   const confirmationLink = `${APP_URL}/api/confirm/${token}`;
 
-  // TODO: send email with confirmation link
-  logger.info({ confirmationLink });
+  const template = <SubscribeTemplate {...options} confirmationLink={confirmationLink} />;
+
+  await sendEmail({
+    to: [options.email],
+    title: `Confirm your weather subscription for ${options.city}`,
+    html: template.toString(),
+    text: SubscribeTemplateText({ ...options, confirmationLink }),
+  });
+
+  logger.info({ email: options.email, city: options.city }, 'Confirmation email sent');
 };
 
 export const confirm = async (token: string) => {
