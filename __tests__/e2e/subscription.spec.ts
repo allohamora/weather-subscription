@@ -90,7 +90,7 @@ describe('subscription controller (e2e)', () => {
         HttpStatus.OK,
       );
 
-      expect(message).toBe('Subscription initiated');
+      expect(message).toBe('Subscription successful. Confirmation email sent.');
 
       expect(validateCitySpy).toHaveBeenCalledWith('London');
       expect(sendEmailSpy).toHaveBeenCalledWith(
@@ -111,7 +111,7 @@ describe('subscription controller (e2e)', () => {
         HttpStatus.OK,
       );
 
-      expect(message).toBe('Subscription initiated');
+      expect(message).toBe('Subscription successful. Confirmation email sent.');
 
       expect(validateCitySpy).toHaveBeenCalledWith('Paris');
       expect(sendEmailSpy).toHaveBeenCalledWith(
@@ -208,7 +208,7 @@ describe('subscription controller (e2e)', () => {
         HttpStatus.OK,
       );
 
-      expect(message).toBe('Subscription initiated');
+      expect(message).toBe('Subscription successful. Confirmation email sent.');
 
       expect(validateCitySpy).toHaveBeenCalledWith('London');
       expect(sendEmailSpy).toHaveBeenCalledWith(
@@ -229,7 +229,7 @@ describe('subscription controller (e2e)', () => {
         HttpStatus.OK,
       );
 
-      expect(message).toBe('Subscription initiated');
+      expect(message).toBe('Subscription successful. Confirmation email sent.');
 
       expect(validateCitySpy).toHaveBeenCalledWith('Paris');
       expect(sendEmailSpy).toHaveBeenCalledWith(
