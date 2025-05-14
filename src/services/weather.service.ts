@@ -72,7 +72,13 @@ export const getWeather = async (city: string) => {
   const data = await res.json();
 
   if (res.ok) {
-    return data as WeatherResponse;
+    const { current } = data as WeatherResponse;
+
+    return {
+      temperature: current.temp_c,
+      humidity: current.humidity,
+      condition: current.condition.text,
+    };
   }
 
   const { error } = data as WeatherErrorResponse;

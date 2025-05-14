@@ -66,15 +66,13 @@ export const handleWeatherSubscription = (frequency: Frequency) => {
 
     for await (const subscriptions of iterateSubscriptions(frequency)) {
       for (const { id, email, city } of subscriptions) {
-        const { current } = await getWeather(city);
+        const weather = await getWeather(city);
         const unsubscribeLink = `${APP_URL}/api/unsubscribe/${id}`;
 
         const props = {
           city,
           unsubscribeLink,
-          temperature: current.temp_c,
-          humidity: current.humidity,
-          condition: current.condition.text,
+          ...weather,
         }
 
         const template = <WeatherUpdateTemplate {...props} />;
