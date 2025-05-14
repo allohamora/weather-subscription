@@ -4,7 +4,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { serve } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
-import { Root } from './root.jsx';
+import { Root } from './root.js';
 import { NODE_ENV, PORT } from './config.js';
 import { subscriptionRouter } from './routers/subscription.router.js';
 import { disconnectFromDb, runMigrations } from './db.js';
