@@ -24,11 +24,6 @@ app.openapi(
   async (c) => await c.html(<Root />),
 );
 
-app.openAPIRegistry.registerComponent('securitySchemes', 'bearer', {
-  type: 'http',
-  scheme: 'bearer',
-})
-
 app.doc('/swagger.json', {
   openapi: '3.0.0',
   info: {
