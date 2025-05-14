@@ -3,6 +3,7 @@ import { sign, verify } from './jwt.service.js';
 import {
   createSubscription,
   isSubscriptionExists,
+  iterateSubscriptions,
   removeSubscriptionById,
 } from 'src/repositories/subscription.repository.js';
 import { APP_URL } from 'src/config.js';
@@ -10,7 +11,8 @@ import { Exception, ExceptionCode } from 'src/exception.js';
 import { createLogger } from 'src/libs/pino.lib.js';
 import { sendEmail } from 'src/libs/email.lib.js';
 import { SubscribeTemplate, SubscribeTemplateText } from 'src/templates/subscribe.js';
-import { validateCity } from './weather.service.js';
+import { getWeather, validateCity } from './weather.service.js';
+import { WeatherUpdateTemplate, WeatherUpdateTemplateText } from 'src/templates/weather-update.js';
 
 const logger = createLogger('subscription.service');
 
@@ -56,4 +58,36 @@ export const confirm = async (token: string) => {
 
 export const unsubscribe = async (subscriptionId: string) => {
   await removeSubscriptionById(subscriptionId);
+};
+
+export const handleWeatherSubscription = (frequency: Frequency) => {
+  return async () => {
+    logger.info({ msg: 'handling weather subscription has been started', frequency });
+
+    for await (const subscriptions of iterateSubscriptions(frequency)) {
+      for (const { id, email, city } of subscriptions) {
+        const { current } = await getWeather(city);
+        const unsubscribeLink = `${APP_URL}/api/unsubscribe/${id}`;
+
+        const props = {
+          city,
+          unsubscribeLink,
+          temperature: current.temp_c,
+          humidity: current.humidity,
+          condition: current.condition.text,
+        }
+
+        const template = <WeatherUpdateTemplate {...props} />;
+
+        await sendEmail({
+          to: [email],
+          title: `Weather update for ${city}`,
+          html: template.toString(),
+          text: WeatherUpdateTemplateText(props),
+        });
+      }
+    }
+
+    logger.info({ msg: 'handling weather subscription has been finished', frequency });
+  };
 };

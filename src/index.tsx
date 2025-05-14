@@ -9,8 +9,11 @@ import { NODE_ENV, PORT } from './config.js';
 import { subscriptionRouter } from './routers/subscription.router.js';
 import { runMigrations } from './db.js';
 import { createLogger } from './libs/pino.lib.js';
+import { setupSubscriptions, startScheduler } from './services/scheduler.service.js';
 
 const app = new OpenAPIHono();
+
+const logger = createLogger('server');
 
 app.use(secureHeaders());
 
@@ -45,18 +48,20 @@ app.route('/api', subscriptionRouter);
 
 app.get('*', serveStatic({ root: './public' }));
 
-const logger = createLogger('server');
-
 serve({ fetch: app.fetch, port: PORT }, async (info) => {
   await runMigrations();
+  await startScheduler();
+
+  await setupSubscriptions();
 
   const parts = ['Server has been started'];
 
   if (NODE_ENV === 'development') {
     parts.push(`at http://localhost:${info.port}`);
-  }
+  };
 
-  logger.info(parts.join(' '), {
+  logger.info({
+    msg: parts.join(' '),
     NODE_ENV,
-  })
+  });
 });
