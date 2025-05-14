@@ -10,9 +10,9 @@ import { APP_URL } from 'src/config.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
 import { createLogger } from 'src/libs/pino.lib.js';
 import { sendEmail } from 'src/libs/email.lib.js';
-import { SubscribeTemplate, SubscribeTemplateText } from 'src/templates/subscribe.js';
+import { SubscribeTemplate, SubscribeTemplateText } from 'src/templates/subscribe.template.js';
 import { getWeather, validateCity } from './weather.service.js';
-import { WeatherUpdateTemplate, WeatherUpdateTemplateText } from 'src/templates/weather-update.js';
+import { WeatherUpdateTemplate, WeatherUpdateTemplateText } from 'src/templates/weather-update.template.js';
 
 const logger = createLogger('subscription.service');
 
