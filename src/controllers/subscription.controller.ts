@@ -80,6 +80,14 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
         400: {
           description: 'Invalid token',
         },
+        // to preserve the contract
+        // but in the current implementation
+        // we use jwt instead of the temporary token
+        // or inactive subscription
+        // then we just don't have this exception
+        404: {
+          description: 'Token not found',
+        },
       },
     }),
     async (c) => {
@@ -106,6 +114,14 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
         },
         400: {
           description: 'Invalid token',
+        },
+        // to preserve the contract
+        // but in the current implementation
+        // we just remove the subscription by id
+        // to check that it exits we need to do an additional request
+        // what is unnecessary
+        404: {
+          description: 'Token not found',
         },
       },
     }),
