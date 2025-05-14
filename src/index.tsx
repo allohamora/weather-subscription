@@ -1,7 +1,7 @@
 import { secureHeaders } from 'hono/secure-headers';
 import { HTTPException } from 'hono/http-exception';
 import { serveStatic } from '@hono/node-server/serve-static';
-import { serve } from '@hono/node-server';
+import { serve, ServerType } from '@hono/node-server';
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.js';
@@ -51,14 +51,7 @@ app.get('*', serveStatic({ root: './public' }));
 
 const TIME_TO_CLOSE_BEFORE_EXIT_IN_MS = 15_000;
 
-const server = serve({ fetch: app.fetch, port: PORT }, async (info) => {
-  await runMigrations();
-  await startScheduler();
-
-  await setupSubscriptions();
-
-  // we need this because here is the reference to the server
-  // and we need to use server before defined if we want to move this code out of here
+const setupGracefulShutdown = (server: ServerType) => {
   const gracefulShutdown = async () => {
     await new Promise((res, rej) => {
       server.close((err) => !err ? res(null) : rej(err));
@@ -85,6 +78,15 @@ const server = serve({ fetch: app.fetch, port: PORT }, async (info) => {
   };
   process.on('unhandledRejection', handleError('app has received unhandledRejection'));
   process.on('uncaughtException', handleError('app has received uncaughtException'));
+}
+
+const server = serve({ fetch: app.fetch, port: PORT }, async (info) => {
+  await runMigrations();
+  await startScheduler();
+
+  await setupSubscriptions();
+
+  setupGracefulShutdown(server);
 
   const parts = ['Server has been started'];
 
