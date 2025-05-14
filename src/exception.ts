@@ -1,4 +1,5 @@
 import { HTTPException } from 'hono/http-exception';
+import { HttpStatus } from './types/http.types.js';
 
 /*
   This is a set of application-specific exception codes that can be used to identify
@@ -17,14 +18,14 @@ export const enum ExceptionCode {
 export const toHttpCode = (code: ExceptionCode) => {
   switch (code) {
     case ExceptionCode.NOT_FOUND:
-      return 404;
+      return HttpStatus.NOT_FOUND;
     case ExceptionCode.VALIDATION_ERROR:
-      return 400;
+      return HttpStatus.BAD_REQUEST;
     case ExceptionCode.ALREADY_EXISTS:
-      return 409;
+      return HttpStatus.CONFLICT;
     case ExceptionCode.INTERNAL_SERVER_ERROR:
     default:
-      return 500;
+      return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 };
 
