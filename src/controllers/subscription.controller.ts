@@ -6,15 +6,18 @@ import { Exception, ExceptionCode } from 'src/exception.js';
 
 export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
   const subscribeSchema = z.object({
-    email: z.string().email(),
-    city: z.string().min(1),
-    frequency: z.enum([Frequency.Hourly, Frequency.Daily]),
+    email: z.string().email().describe('Email address to subscribe'),
+    city: z.string().min(1).describe('City for weather updates'),
+    frequency: z.enum([Frequency.Hourly, Frequency.Daily]).describe('Frequency of updates (hourly or daily)'),
   });
 
   app.openapi(
     createRoute({
       method: 'post',
       path: '/subscribe',
+      tags: ['subscription'],
+      summary: 'Subscribe to weather updates',
+      description: 'Subscribe an email to receive weather updates for a specific city with chosen frequency.',
       request: {
         body: {
           content: {
@@ -30,7 +33,7 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
       responses: {
         // in the contract 200 instead of 201
         200: {
-          description: 'Subscription initiated',
+          description: 'Subscription successful. Confirmation email sent.',
         },
         400: {
           description: 'Invalid input',
@@ -38,6 +41,7 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
         409: {
           description: 'Email already subscribed',
         },
+        // we don't have in the contract, but we can have it in the code
         500: {
           description: 'Internal server error',
         },
@@ -60,7 +64,7 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
       const options = getSubscribeBody();
       await subscribe(options);
 
-      return c.json({ message: 'Subscription initiated' }, 200);
+      return c.json({ message: 'Subscription successful. Confirmation email sent.' }, 200);
     },
   );
 
@@ -68,9 +72,12 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
     createRoute({
       method: 'get',
       path: '/confirm/{token}',
+      tags: ['subscription'],
+      summary: 'Confirm email subscription',
+      description: 'Confirms a subscription using the token sent in the confirmation email.',
       request: {
         params: z.object({
-          token: z.string().jwt(),
+          token: z.string().jwt().describe('Confirmation token'),
         }),
       },
       responses: {
@@ -103,9 +110,12 @@ export const makeSubscriptionRoutes = (app: OpenAPIHono) => {
     createRoute({
       method: 'get',
       path: '/unsubscribe/{token}',
+      tags: ['subscription'],
+      summary: 'Unsubscribe from weather updates',
+      description: 'Unsubscribes an email from weather updates using the token sent in emails.',
       request: {
         params: z.object({
-          token: z.string().uuid(),
+          token: z.string().uuid().describe('Unsubscribe token'),
         }),
       },
       responses: {
