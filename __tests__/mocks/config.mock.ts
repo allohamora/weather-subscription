@@ -11,7 +11,10 @@ vitest.mock('src/config.js', () => {
 
     NODE_ENV: 'test',
 
+    POSTGRES_URL: 'postgres://app:example@localhost:5432/test',
+
     DRIZZLE_DEBUG: false,
+
     PINO_LEVEL: 'fatal',
   };
 });
