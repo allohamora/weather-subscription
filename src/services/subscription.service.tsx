@@ -20,14 +20,14 @@ export type SubscribeOptions = {
   frequency: Frequency;
 };
 
-const checkIsSubscriptionExists = async (email: string, city: string) => {
-  if (await isSubscriptionExists(email, city)) {
+const checkIsSubscriptionExists = async (email: string) => {
+  if (await isSubscriptionExists(email)) {
     throw new Exception(ExceptionCode.ALREADY_EXISTS, 'Subscription already exists');
   }
 };
 
 export const subscribe = async (options: SubscribeOptions) => {
-  await checkIsSubscriptionExists(options.email, options.city);
+  await checkIsSubscriptionExists(options.email);
 
   await validateCity(options.city);
 
@@ -49,7 +49,7 @@ export const subscribe = async (options: SubscribeOptions) => {
 export const confirm = async (token: string) => {
   const options = await verify<SubscribeOptions>(token);
 
-  await checkIsSubscriptionExists(options.email, options.city);
+  await checkIsSubscriptionExists(options.email);
 
   await createSubscription(options);
 };
