@@ -5,7 +5,11 @@ a weather subscription app.
 [![build](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml)
 [![test](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml)
 
-**[Live Application](https://weather-app.dev/)** - Production version
+## Live Demo
+
+🌐 **Try it now:** [https://weather-app.dev](https://weather-app.dev)
+
+Experience the Weather Subscription application in production without setting up your own environment.
 
 ## Overview
 
