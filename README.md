@@ -7,19 +7,21 @@ a weather subscription app.
 
 ## Overview
 
-This application is built with:
+This application allows users to subscribe to weather updates and receive them via email at their preferred interval. It's built with modern TypeScript technologies:
 
-- [Hono](https://hono.dev/) for the API server
-- [Drizzle ORM](https://orm.drizzle.team/) for database operations
-- [Croner](https://github.com/hexagon/croner) for scheduling periodic weather updates
+- [Hono](https://hono.dev/) - Fast, lightweight web framework
+- [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM for SQL databases
+- [PostgreSQL](https://www.postgresql.org/) - Robust relational database
+- [Resend](https://resend.com/) - Email delivery service
+- [Croner](https://github.com/hexagon/croner) - Cron-based job scheduler
 
 ## Prerequisites
 
 Before running the application, you'll need:
 
-- Node.js (v22 or higher recommended)
-- npm
-- Docker and Docker Compose (for running PostgreSQL)
+- Node.js (v22.13.0 or higher)
+- npm (v10.9.2 or higher)
+- Docker and Docker Compose
 - A domain for email sending
 
 ## Setup Weather API
@@ -38,9 +40,10 @@ Before running the application, you'll need:
 5. Create an API key
 6. You'll add this key to your `.env` file in the installation steps
 
-## Installation & Running the App
+## Installation & Local Development
 
 1. Clone the repository
+
 2. Install dependencies:
 
    ```bash
@@ -58,7 +61,7 @@ Before running the application, you'll need:
 5. Start the required services with Docker:
 
    ```bash
-   docker compose up -d
+   docker compose up -d pg
    ```
 
 6. Run the application in development mode:
@@ -71,31 +74,84 @@ Before running the application, you'll need:
    - Subscribe form: [http://localhost:3000](http://localhost:3000)
    - Swagger API documentation: [http://localhost:3000/swagger](http://localhost:3000/swagger)
 
+## Running in Docker
+
+For a full production-like environment:
+
+1. Clone the repository
+
+2. Create a `.env` file from the template:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Fill the `.env` file with your API keys and configuration
+
+4. Start the application and all services using Docker:
+
+   ```bash
+   docker compose up -d
+   ```
+
+5. Access the application:
+   - Subscribe form: [http://localhost:3000](http://localhost:3000)
+   - Swagger API documentation: [http://localhost:3000/swagger](http://localhost:3000/swagger)
+
 ## Database Management
 
 Database migrations are automatically run when the application starts.
 
-To generate a new migration after schema changes:
+To generate a new migration after making schema changes:
 
 ```bash
 npm run migrations:generate
 ```
 
-## Testing
-
-The project includes end-to-end tests. Run them with:
+## Development Scripts
 
 ```bash
+# Run the application in development mode
+npm run dev
+
+# Build the application
+npm run build
+
+# Start the production build
+npm run start
+
+# Run tests
 npm run test
+
+# Format code
+npm run format:fix
+
+# Lint code
+npm run lint:fix
 ```
 
-## Project Architecture & Design Decisions
+## Project Architecture
 
-### Project Goal
+### API Structure
 
-This project implements a weather subscription service following the contract defined in the [swagger.yaml](https://github.com/mykhailo-hrynko/se-school-5/blob/c05946703852b277e9d6dcb63ffd06fd1e06da5f/swagger.yaml) and addressing the requirements in the [README.md](https://github.com/mykhailo-hrynko/se-school-5/blob/c05946703852b277e9d6dcb63ffd06fd1e06da5f/README.md).
+The application follows a clean architecture pattern:
 
-### JWT for Subscription Management
+- **Controllers** (`src/controllers/`) - Handle HTTP requests/responses
+- **Services** (`src/services/`) - Implement business logic
+- **Repositories** (`src/repositories/`) - Handle data access
+- **Templates** (`src/templates/`) - Define email templates
+
+### Design Decisions
+
+#### Weather API Integration
+
+This project uses [Weather API](https://www.weatherapi.com/) to fetch accurate weather data. The service layer abstracts the API integration, making it easy to swap providers if needed.
+
+#### Email Delivery
+
+The application uses [Resend](https://resend.com/) for reliable email delivery. Emails are generated using custom templates and delivered at the user's preferred intervals.
+
+#### JWT for Subscription Management
 
 This application uses JWT tokens rather than storing inactive subscriptions in the database for several reasons:
 
@@ -107,7 +163,7 @@ The JWT contains all necessary information for subscription creation, and if a u
 
 For more robust production environments, a Redis-based token store with TTL could be implemented, but this would add unnecessary complexity for this project.
 
-### Scheduling with Croner vs. Message Queues
+#### Scheduling
 
 The application uses [Croner](https://github.com/hexagon/croner) for scheduling weather updates instead of a message queue system because:
 
