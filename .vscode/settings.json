@@ -1,0 +1,25 @@
+{
+  "files.eol": "\n",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "localhost",
+      "database": "app",
+      "username": "app",
+      "password": "example"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "localhost",
+      "database": "test",
+      "username": "app",
+      "password": "example"
+    }
+  ]
+}
