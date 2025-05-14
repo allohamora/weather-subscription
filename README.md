@@ -5,6 +5,8 @@ a weather subscription app.
 [![build](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml)
 [![test](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml)
 
+**[Live Application](https://weather-app.dev/)** - Production version
+
 ## Overview
 
 This application allows users to subscribe to weather updates and receive them via email at their preferred interval. It's built with modern TypeScript technologies:
