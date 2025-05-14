@@ -11,6 +11,7 @@
     "dev": "tsx watch --clear-screen=false src/index.tsx",
     "build": "tsc -p ./tsconfig.build.json",
     "postbuild": "tsc-alias -p ./tsconfig.build.json",
+    "test": "vitest",
     "format": "prettier . --check",
     "format:fix": "prettier --write .",
     "lint": "eslint \"**/*.ts\"",
@@ -50,7 +51,9 @@
     "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1"
+    "typescript-eslint": "^8.32.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.3"
   },
   "lint-staged": {
     "*.{js,cjs,mjs,json,yml,md}": "prettier --write",

@@ -4,7 +4,7 @@ import { subscribe, confirm, unsubscribe } from 'src/services/subscription.servi
 import { Frequency } from 'src/db.schema.js';
 import { Exception, ExceptionCode } from 'src/exception.js';
 
-export const subscriptionRouter = new OpenAPIHono();
+export const subscriptionController = new OpenAPIHono();
 
 const subscribeSchema = z.object({
   email: z.string().email(),
@@ -12,7 +12,7 @@ const subscribeSchema = z.object({
   frequency: z.enum([Frequency.Hourly, Frequency.Daily]),
 });
 
-subscriptionRouter.openapi(
+subscriptionController.openapi(
   createRoute({
     method: 'post',
     path: '/subscribe',
@@ -29,6 +29,7 @@ subscriptionRouter.openapi(
       },
     },
     responses: {
+      // in the contract 200 instead of 201
       200: {
         description: 'Subscription initiated',
       },
@@ -64,13 +65,13 @@ subscriptionRouter.openapi(
   },
 );
 
-subscriptionRouter.openapi(
+subscriptionController.openapi(
   createRoute({
     method: 'get',
     path: '/confirm/{token}',
     request: {
       params: z.object({
-        token: z.string(),
+        token: z.string().jwt(),
       }),
     },
     responses: {
@@ -91,13 +92,13 @@ subscriptionRouter.openapi(
   },
 );
 
-subscriptionRouter.openapi(
+subscriptionController.openapi(
   createRoute({
     method: 'get',
     path: '/unsubscribe/{token}',
     request: {
       params: z.object({
-        token: z.string(),
+        token: z.string().uuid(),
       }),
     },
     responses: {
