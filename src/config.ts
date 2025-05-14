@@ -2,6 +2,8 @@ import { parseEnv } from 'znv';
 import { z } from 'zod';
 import 'dotenv/config';
 
+console.log(process.env);
+
 export const {
   NODE_ENV = 'development',
   PORT = 3000,
