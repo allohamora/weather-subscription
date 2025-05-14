@@ -2,7 +2,7 @@ import { serve, ServerType } from '@hono/node-server';
 import { NODE_ENV, PORT } from './config.js';
 import { disconnectFromDb, runMigrations } from './db.js';
 import { createLogger } from './libs/pino.lib.js';
-import { setupSubscriptions, startScheduler, stopScheduler } from './services/scheduler.service.js';
+import { startCron, stopCron } from './services/cron.service.js';
 import { onGracefulShutdown } from './utils/graceful-shutdown.utils.js';
 import { app } from './app.js';
 
@@ -17,7 +17,7 @@ const setupGracefulShutdown = (server: ServerType) => {
     });
 
     await disconnectFromDb();
-    await stopScheduler();
+    await stopCron();
   };
   onGracefulShutdown(gracefulShutdown);
 
@@ -41,9 +41,7 @@ const setupGracefulShutdown = (server: ServerType) => {
 
 const server = serve({ fetch: app.fetch, port: PORT }, async (info) => {
   await runMigrations();
-  await startScheduler();
-
-  await setupSubscriptions();
+  await startCron();
 
   setupGracefulShutdown(server);
 
