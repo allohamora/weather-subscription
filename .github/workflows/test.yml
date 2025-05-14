@@ -23,7 +23,7 @@ jobs:
           cache: "npm"
 
       - name: Start services
-        run: docker compose up -d
+        run: docker compose up -d pg
 
       - name: Install dependencies
         run: npm ci
