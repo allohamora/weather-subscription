@@ -5,7 +5,7 @@ export type WeatherUpdateTemplateProps = {
   unsubscribeLink: string;
   temperature: number;
   humidity: number;
-  condition: string;
+  description: string;
 };
 
 export const WeatherUpdateTemplate: FC<WeatherUpdateTemplateProps> = ({
@@ -13,7 +13,7 @@ export const WeatherUpdateTemplate: FC<WeatherUpdateTemplateProps> = ({
   unsubscribeLink,
   temperature,
   humidity,
-  condition,
+  description,
 }) => {
   return (
     <div>
@@ -24,7 +24,7 @@ export const WeatherUpdateTemplate: FC<WeatherUpdateTemplateProps> = ({
         </p>
         <p>Temperature: {temperature}°C</p>
         <p>Humidity: {humidity}%</p>
-        <p>Conditions: {condition}</p>
+        <p>Description: {description}</p>
       </div>
       <div>
         <p>
@@ -43,7 +43,7 @@ export const WeatherUpdateTemplateText = ({
   unsubscribeLink,
   temperature,
   humidity,
-  condition,
+  description,
 }: WeatherUpdateTemplateProps) => {
   return `
 Weather Update for ${city}
@@ -51,7 +51,7 @@ Weather Update for ${city}
 Current Weather
 Temperature: ${temperature}°C
 Humidity: ${humidity}%
-Conditions: ${condition}
+Description: ${description}
 
 You're receiving this update because you subscribed to weather updates for ${city}.
 To unsubscribe, visit: ${unsubscribeLink}

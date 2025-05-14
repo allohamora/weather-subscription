@@ -77,7 +77,7 @@ export const getWeather = async (city: string) => {
     return {
       temperature: current.temp_c,
       humidity: current.humidity,
-      condition: current.condition.text,
+      description: current.condition.text,
     };
   }
 

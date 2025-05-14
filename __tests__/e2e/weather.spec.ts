@@ -29,7 +29,7 @@ describe('weather controller (e2e)', () => {
       getWeatherSpy.mockResolvedValueOnce({
         temperature: 25,
         humidity: 60,
-        condition: 'Partly cloudy',
+        description: 'Partly cloudy',
       });
 
       const data = await getWeather('London', HttpStatus.OK);

@@ -9,7 +9,7 @@ vitest.mock('src/services/weather.service.js', () => ({
     return {
       temperature: 20,
       humidity: 50,
-      condition: 'Sunny',
+      description: 'Sunny',
     };
   },
   validateCity: async (city: string) => {

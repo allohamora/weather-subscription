@@ -41,11 +41,7 @@ export const makeWeatherRoutes = (app: OpenAPIHono) => {
 
       const weather = await getWeather(city);
 
-      return c.json({
-        temperature: weather.temperature,
-        humidity: weather.humidity,
-        description: weather.condition,
-      });
+      return c.json(weather);
     },
   );
 };
