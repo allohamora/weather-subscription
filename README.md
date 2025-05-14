@@ -2,8 +2,8 @@
 
 a weather subscription app.
 
-[![build](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml/badge.svg?event=push)](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml)
-[![test](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml/badge.svg?event=push)](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml)
+[![build](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/build.yml)
+[![test](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml/badge.svg?event=push&branch=master)](https://github.com/allohamora/weather-subscription/actions/workflows/test.yml)
 
 ## Overview
 
