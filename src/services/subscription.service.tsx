@@ -10,6 +10,7 @@ import { Exception, ExceptionCode } from 'src/exception.js';
 import { createLogger } from 'src/libs/pino.lib.js';
 import { sendEmail } from 'src/libs/email.lib.js';
 import { SubscribeTemplate, SubscribeTemplateText } from 'src/templates/subscribe.js';
+import { validateCity } from './weather.service.js';
 
 const logger = createLogger('subscription.service');
 
@@ -27,6 +28,8 @@ const checkIsSubscriptionExists = async (email: string, city: string) => {
 
 export const subscribe = async (options: SubscribeOptions) => {
   await checkIsSubscriptionExists(options.email, options.city);
+
+  await validateCity(options.city);
 
   const token = await sign(options);
   const confirmationLink = `${APP_URL}/api/confirm/${token}`;

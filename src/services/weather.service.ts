@@ -83,3 +83,15 @@ export const getWeather = async (city: string) => {
 
   throw new Exception(ExceptionCode.INTERNAL_SERVER_ERROR, error?.message);
 };
+
+export const validateCity = async (city: string) => {
+  try {
+    await getWeather(city);
+  } catch (error) {
+    if (error instanceof Exception && error.code === ExceptionCode.NOT_FOUND) {
+      throw new Exception(ExceptionCode.VALIDATION_ERROR, 'City not found');
+    }
+
+    throw error;
+  }
+};
