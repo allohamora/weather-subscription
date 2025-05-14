@@ -7,9 +7,10 @@ import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import { Root } from './root.jsx';
 import { NODE_ENV, PORT } from './config.js';
 import { subscriptionRouter } from './routers/subscription.router.js';
-import { runMigrations } from './db.js';
+import { disconnectFromDb, runMigrations } from './db.js';
 import { createLogger } from './libs/pino.lib.js';
-import { setupSubscriptions, startScheduler } from './services/scheduler.service.js';
+import { setupSubscriptions, startScheduler, stopScheduler } from './services/scheduler.service.js';
+import { onGracefulShutdown } from './utils/graceful-shutdown.utils.js';
 
 const app = new OpenAPIHono();
 
@@ -48,11 +49,42 @@ app.route('/api', subscriptionRouter);
 
 app.get('*', serveStatic({ root: './public' }));
 
-serve({ fetch: app.fetch, port: PORT }, async (info) => {
+const TIME_TO_CLOSE_BEFORE_EXIT_IN_MS = 15_000;
+
+const server = serve({ fetch: app.fetch, port: PORT }, async (info) => {
   await runMigrations();
   await startScheduler();
 
   await setupSubscriptions();
+
+  // we need this because here is the reference to the server
+  // and we need to use server before defined if we want to move this code out of here
+  const gracefulShutdown = async () => {
+    await new Promise((res, rej) => {
+      server.close((err) => !err ? res(null) : rej(err));
+    });
+
+    await disconnectFromDb();
+    await stopScheduler();
+  };
+  onGracefulShutdown(gracefulShutdown);
+
+  const handleError = (errorName: string) => async (cause: unknown) => {
+    logger.error({ err: new Error(errorName, { cause }) });
+
+    const timeout = setTimeout(() => {
+      logger.error(new Error('Graceful shutdown has been failed', { cause }));
+
+      process.exit(1);
+    }, TIME_TO_CLOSE_BEFORE_EXIT_IN_MS);
+
+    await gracefulShutdown();
+    clearTimeout(timeout);
+
+    process.exit(1);
+  };
+  process.on('unhandledRejection', handleError('app has received unhandledRejection'));
+  process.on('uncaughtException', handleError('app has received uncaughtException'));
 
   const parts = ['Server has been started'];
 
